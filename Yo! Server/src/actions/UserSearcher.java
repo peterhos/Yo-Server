@@ -23,12 +23,10 @@ public class UserSearcher {
 		try {
 			ArrayList<User> foundedUsers = new ArrayList<User>(dbConnector.getUsers(user.getUserName()));
 			
-			sender.send( foundedUsers );
+			sender.send(foundedUsers);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
