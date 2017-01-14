@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AdministratorLogin">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="250.0">
+         <children>
+            <Label fx:id="loginStatus">
+               <HBox.margin>
+                  <Insets left="27.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="70.0" prefWidth="250.0">
+         <children>
+            <TextField fx:id="username" promptText="User Name">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="70.0" prefWidth="250.0">
+         <children>
+            <PasswordField fx:id="password" promptText="Password">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </PasswordField>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="70.0" prefWidth="250.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#login" text="Login">
+               <HBox.margin>
+                  <Insets right="29.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Button>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+   </children>
+   <effect>
+      <Lighting surfaceScale="1.86">
+         <bumpInput>
+            <Shadow height="0.0" radius="10.125" width="42.5" />
+         </bumpInput>
+         <light>
+            <Light.Distant />
+         </light>
+      </Lighting>
+   </effect>
+</VBox>

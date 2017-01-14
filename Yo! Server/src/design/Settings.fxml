@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="314.0" prefWidth="314.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SettingsController">
+   <children>
+      <TabPane prefHeight="324.0" prefWidth="314.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="General">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+          <Tab text="Database">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="279.0" prefWidth="314.0">
+                     <children>
+                        <HBox alignment="CENTER" layoutY="10.0" prefHeight="45.0" prefWidth="307.0" spacing="30.0" AnchorPane.bottomAnchor="213.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0">
+                           <children>
+                              <Label text="Engine:">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="engine" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutY="48.0" prefHeight="45.0" prefWidth="307.0" spacing="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                           <children>
+                              <Label text="IP Address:" />
+                              <TextField fx:id="ip" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="6.0" layoutY="86.0" prefHeight="38.0" prefWidth="307.0" spacing="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="92.0">
+                           <children>
+                              <Label text="Port :" />
+                              <TextField fx:id="port" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutY="125.0" prefHeight="38.0" prefWidth="307.0" spacing="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="130.0">
+                           <children>
+                              <Label text="Schema:" />
+                              <TextField fx:id="schema" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutY="164.0" prefHeight="38.0" prefWidth="307.0" spacing="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="165.0">
+                           <children>
+                              <Label text="User:" />
+                              <TextField fx:id="user" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="4.0" layoutY="202.0" prefHeight="38.0" prefWidth="307.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+                           <children>
+                              <Label text="Password:" />
+                              <TextField fx:id="password" />
+                           </children>
+                        </HBox>
+                        <Button layoutX="126.0" layoutY="242.0" mnemonicParsing="false" text="Apply" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</VBox>
