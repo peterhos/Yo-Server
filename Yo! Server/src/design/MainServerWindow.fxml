@@ -7,13 +7,15 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServerController">
    <children>
       <MenuBar layoutX="71.0" layoutY="14.0" maxHeight="25.0" prefHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#saveLogToFile" text="Save log" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveErrorToFile" text="Save error" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
             </items>
           </Menu>
@@ -27,6 +29,9 @@
             </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#cleanLogArea" text="Clean log" />
+                  <MenuItem mnemonicParsing="false" onAction="#cleanErrorArea" text="Clean error" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#openSettings" text="Settings" />
             </items>
           </Menu>

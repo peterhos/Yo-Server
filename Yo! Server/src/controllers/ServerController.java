@@ -1,8 +1,12 @@
 package controllers;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import activity.TextFileSaver;
 import data.Contact;
 import dialogs.CloseWindowDialog;
 import dialogs.InformationDialog;
@@ -23,6 +27,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import server.Server;
 
@@ -123,6 +128,25 @@ public class ServerController implements Initializable {
 			}
 		);
 	}
+	
+	public void cleanLogArea(ActionEvent event) {
+		logArea.clear();
+	}
+	
+	public void cleanErrorArea(ActionEvent event) {
+		errorArea.clear();
+	}
+	
+	public void saveLogToFile(ActionEvent event) {
+		TextFileSaver fileSaver = new TextFileSaver("Save log file", "log.txt", this);
+		fileSaver.saveString(logArea.getText());
+	}
+	
+	public void saveErrorToFile(ActionEvent event) {
+		TextFileSaver fileSaver = new TextFileSaver("Save error file", "error.txt", this);
+		fileSaver.saveString(errorArea.getText());
+	}
+	
 	
 	public void showServerStatus() {
 		Alert alert = new Alert(AlertType.INFORMATION);
