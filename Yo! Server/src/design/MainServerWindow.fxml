@@ -9,6 +9,11 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServerController">
    <children>
+      <ImageView fitHeight="76.0" fitWidth="1318.0" layoutX="3.0" layoutY="29.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-518.0" AnchorPane.topAnchor="29.0">
+         <image>
+            <Image url="@../../images/MainBar.png" />
+         </image>
+      </ImageView>
       <MenuBar layoutX="71.0" layoutY="14.0" maxHeight="25.0" prefHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
@@ -88,13 +93,8 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <ImageView fitHeight="80.0" fitWidth="800.0" layoutX="42.0" layoutY="27.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-         <image>
-            <Image url="@../../../../../Grafiki%20Yo!%20Server/welcommm2.png" />
-         </image>
-      </ImageView>
-      <Button fx:id="start" layoutX="622.0" layoutY="55.0" mnemonicParsing="false" onAction="#startServer" text="Start" />
-      <Button layoutX="700.0" layoutY="55.0" mnemonicParsing="false" onAction="#stopServer" text="Stop" />
-      <Label fx:id="serverStatus" layoutX="672.0" layoutY="29.0" text="Stopped" />
+      <Button fx:id="start" layoutX="622.0" layoutY="55.0" mnemonicParsing="false" onAction="#startServer" text="Start" AnchorPane.rightAnchor="120.0" />
+      <Button layoutX="700.0" layoutY="55.0" mnemonicParsing="false" onAction="#stopServer" text="Stop" AnchorPane.rightAnchor="52.0" />
+      <Label fx:id="serverStatus" layoutX="672.0" layoutY="29.0" text="Stopped" AnchorPane.rightAnchor="100.0" />
    </children>
 </AnchorPane>
