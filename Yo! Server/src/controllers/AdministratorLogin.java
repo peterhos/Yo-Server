@@ -3,6 +3,7 @@ package controllers;
 import java.io.IOException;
 import java.util.Optional;
 
+import dialogs.CloseWindowDialog;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,7 +41,7 @@ public class AdministratorLogin {
 	
 	public void openServerMainWindow() throws IOException {
 		Stage primaryStage = new Stage();
-		Parent root = FXMLLoader.load(getClass().getResource("/design/ServerMainWindow.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/design/MainServerWindow.fxml"));
 		primaryStage.setOnCloseRequest(e -> {
 			e.consume();
 			closeProgram();
@@ -52,22 +53,11 @@ public class AdministratorLogin {
 	}
 	
 	private void closeProgram() {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Shutdown");
-		alert.setHeaderText("Program will be shut down");
-		alert.setContentText("Are you sure you want to exit?");
-
-		ButtonType buttonYes = new ButtonType("Yes");
-		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-
-		alert.getButtonTypes().setAll(buttonYes, buttonTypeCancel);
-
-		Optional<ButtonType> result = alert.showAndWait();
-		if (result.get() == buttonYes){
+		CloseWindowDialog closeWindowDialog = new CloseWindowDialog();
+		boolean decision = closeWindowDialog.showAndWait();
+		
+		if (decision == true)
 		    System.exit(0);
-		} else {
-		    // ... user chose CANCEL or closed the dialog
-		}
 	}
 
 	public void closeLoginWindow() {

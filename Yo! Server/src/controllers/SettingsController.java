@@ -1,26 +1,39 @@
 package controllers;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
-public class SettingsController {
+public class SettingsController implements Initializable{
 	@FXML
-	private TextField engine;
-	
-	@FXML
-	private TextField ip;
+	private TextField engine = new TextField();
 	
 	@FXML
-	private TextField port;
+	private TextField ip = new TextField();
 	
 	@FXML
-	private TextField schema;
+	private TextField port = new TextField();
 	
 	@FXML
-	private TextField user;
+	private TextField schema = new TextField();
 	
 	@FXML
-	private TextField password;
+	private TextField user = new TextField();
+	
+	@FXML
+	private TextField password = new TextField();
 	
 	
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		engine.setText(ServerController.dbEngine);
+		ip.setText(ServerController.ip);
+		port.setText(ServerController.port);
+		schema.setText(ServerController.schema);
+		user.setText(ServerController.user);
+		password.setText(ServerController.password);
+	}
 }

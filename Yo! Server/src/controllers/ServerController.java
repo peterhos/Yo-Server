@@ -1,10 +1,10 @@
 package controllers;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import data.Contact;
+import dialogs.CloseWindowDialog;
 import dialogs.InformationDialog;
 import dialogs.StackTraceDialog;
 import javafx.application.Platform;
@@ -23,14 +23,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.stage.Stage;
-import javafx.scene.control.ButtonType;
 import server.Server;
 
 public class ServerController implements Initializable {
 
 	private Server server;
+	
+	public static String dbEngine = "mysql";
+	public static String ip = "127.0.0.1";
+	public static String port = "3306";
+	public static String schema = "YoDB";
+	public static String user = "ServerSquad";
+	public static String password = "Server1.Conn";
 	
 	@FXML
 	private Label serverStatus = new Label("Stopped");
@@ -42,10 +47,9 @@ public class ServerController implements Initializable {
 	private TextArea errorArea = new TextArea("");
 	
 	
-	// The table and columns
+	// Table and columns for connections
 	@FXML
 	TableView<Contact> tableID;
-
 	@FXML
 	TableColumn remoteAddress;
 	@FXML
@@ -57,6 +61,18 @@ public class ServerController implements Initializable {
 
 	// The table's data
 	public ObservableList<Contact> data;
+	
+	
+	
+	public void startServer(ActionEvent event) throws Exception {
+		server = new Server(1056, this);
+		serverStatus.setText("Running...");
+	}
+	
+	public void stopServer(ActionEvent event) throws Exception {
+		server.stopServer();
+		serverStatus.setText("Stopped");
+	}
 	
 	public void addContact(Contact connection) {
 		data.add(connection);
@@ -92,17 +108,6 @@ public class ServerController implements Initializable {
 	
 	
 	
-	
-	public void startServer(ActionEvent event) throws Exception {
-		server = new Server(1056, this);
-		serverStatus.setText("Running...");
-	}
-	
-	public void stopServer(ActionEvent event) throws Exception {
-		server.stopServer();
-		serverStatus.setText("Stopped");
-	}
-	
 	public void printLogText(String text) {
 		logArea.appendText("$: " + text + "\n");
 	}
@@ -111,22 +116,6 @@ public class ServerController implements Initializable {
 		errorArea.appendText("!: " +text + "\n");
 	}
 	
-	public void closeProgram(ActionEvent event) throws Exception {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Shutdown");
-		alert.setHeaderText("Program will be shut down");
-		alert.setContentText("Are you sure you want to exit?");
-
-		ButtonType buttonYes = new ButtonType("Yes");
-		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-
-		alert.getButtonTypes().setAll(buttonYes, buttonTypeCancel);
-
-		Optional<ButtonType> result = alert.showAndWait();
-		if (result.get() == buttonYes)
-		    System.exit(0);
-	}
-
 	public void showStackTraceDialog(Exception e) {
 		Platform.runLater(
 			() -> {
@@ -157,5 +146,11 @@ public class ServerController implements Initializable {
 		primaryStage.show();
 	}
 
-	
+	public void closeProgram(ActionEvent event) throws Exception {
+		CloseWindowDialog closeWindowDialog = new CloseWindowDialog();
+		boolean decision = closeWindowDialog.showAndWait();
+		
+		if (decision == true)
+		    System.exit(0);
+	}
 }
