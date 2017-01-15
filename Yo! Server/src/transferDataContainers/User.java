@@ -4,11 +4,15 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String userName = null;
-	private String firstName = null;
-	private String lastName = null;
-	private String city = null;
-	private String country = null;
+	private String 	userName = null;
+	private String 	firstName = null;
+	private String 	lastName = null;
+	private String 	eMail = null;
+	private int 	age = 0;
+	private String 	city = null;
+	private String 	country = null;
+	private String	gender = null;
+	
 	
 	public User(String userName) {
 		this.userName = userName;
@@ -18,22 +22,23 @@ public class User implements Serializable {
 		this.userName = user.getUserName();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
+		this.eMail = user.geteMail();
+		this.age = user.getAge();
 		this.city = user.getCity();
 		this.country = user.getCountry();
+		this.gender = user.getGender();
 	}
 	
-	public User(String username, String firstName, String lastName, String city, String country) {
+	public User(String username, String firstName, String lastName,
+			String eMail, int age, String city, String country, String gender) {
 		this.userName = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.eMail = eMail;
+		this.age = age;
 		this.city = city;
 		this.country = country;
-	}
-
-	public String toString() {
-		return "\nUserName: " + userName
-				+ "\nFirst Name: " + firstName
-				+ "\nLast Name: " + lastName;
+		this.gender = gender;
 	}
 	
 	public String getUserName() {
@@ -76,4 +81,27 @@ public class User implements Serializable {
 		this.country = country;
 	}
 	
+	public String geteMail() {
+		return eMail;
+	}
+
+	public void seteMail(String eMail) {
+		this.eMail = eMail;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 }

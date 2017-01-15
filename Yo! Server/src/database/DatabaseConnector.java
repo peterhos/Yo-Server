@@ -90,10 +90,13 @@ public class DatabaseConnector implements Closeable{
 				String userName = myRs.getString("Nick");
 				String firstName = myRs.getString("FirstName");
 				String lastName = myRs.getString("LastName");
+				String eMail = myRs.getString("Email");
+				int age = myRs.getInt("Age");
 				String city = myRs.getString("City");
 				String country = myRs.getString("Country");
+				String gender = getGenderName(myRs.getInt("Gender_GederId"));
 				
-				foundedUsers.add(new User(userName, firstName, lastName, city, country));
+				foundedUsers.add(new User(userName, firstName, lastName, eMail, age, city, country, gender));
 			}
 			
 			prepStatement.close();
@@ -104,6 +107,34 @@ public class DatabaseConnector implements Closeable{
 			e.printStackTrace();
 		}
 		return foundedUsers;
+	}
+	
+	public String getGenderName(int genderId) {
+		PreparedStatement prepStatement = null;
+		ResultSet result;
+		String query = "SELECT * FROM YoDB.Gender WHERE GenderId=?;";
+		String genderName = null;
+		
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			prepStatement = databaseConnection.prepareStatement(query);
+			prepStatement.setInt(1, genderId);
+			
+			result = prepStatement.executeQuery();
+			
+			if (result.next()) {
+				genderName = result.getString("Name");
+			}
+			
+			prepStatement.close();
+			
+		} catch (SQLException e) {
+			System.err.println("Problem z pobraniem danych o userze");
+		}
+		
+		return genderName;
 	}
 	
 	public String getUserPassword(String nick) throws SQLException {
@@ -162,7 +193,7 @@ public class DatabaseConnector implements Closeable{
 			
 			prepStatement.close();
 		} catch(NullPointerException e) {
-			System.err.println("Poszlo sie cos tutaj w addNewUser jebac");
+			System.err.println("Poszlo sie cos tutaj w addNewUser niedobrze xD");
 		} catch (SQLException e) {
 			System.err.println("Something went wrong with executing SQL");
 		}
@@ -330,8 +361,11 @@ public class DatabaseConnector implements Closeable{
 				user.setUserName(result.getString("Nick"));
 				user.setFirstName(result.getString("FirstName"));
 				user.setLastName(result.getString("LastName"));
+				user.seteMail(result.getString("Email"));
+				user.setAge(result.getInt("Age"));
 				user.setCity(result.getString("City"));
 				user.setCountry(result.getString("Country"));
+				user.setGender(getGenderName(result.getInt("Gender_GenderId")));
 			}
 			
 			
@@ -345,7 +379,7 @@ public class DatabaseConnector implements Closeable{
 	}
 	
 	public User getUserInfo(int userId) {
-		User user = new User(null,null,null,null,null);
+		User user = new User(null,null,null,null,0,null,null,null);
 		PreparedStatement prepStatement = null;
 		ResultSet result;
 		String query = "SELECT * FROM YoDB.User WHERE UserId=?;";
@@ -364,8 +398,11 @@ public class DatabaseConnector implements Closeable{
 				user.setUserName(result.getString("Nick"));
 				user.setFirstName(result.getString("FirstName"));
 				user.setLastName(result.getString("LastName"));
+				user.seteMail(result.getString("Email"));
+				user.setAge(result.getInt("Age"));
 				user.setCity(result.getString("City"));
 				user.setCountry(result.getString("Country"));
+				user.setGender(getGenderName(result.getInt("Gender_GenderId")));
 			}
 			
 			
