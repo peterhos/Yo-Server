@@ -36,4 +36,13 @@ public class SettingsController implements Initializable{
 		user.setText(ServerController.user);
 		password.setText(ServerController.password);
 	}
+	
+	public void updateDatabaseParameters() {
+		ServerController.dbEngine = engine.getText();
+		ServerController.ip = ip.getText();
+		ServerController.port = port.getText();
+		ServerController.schema = schema.getText();
+		ServerController.user = user.getText();
+		ServerController.password = password.getText();
+	}
 }

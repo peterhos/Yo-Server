@@ -59,7 +59,7 @@
                               <TextField fx:id="password" />
                            </children>
                         </HBox>
-                        <Button layoutX="126.0" layoutY="242.0" mnemonicParsing="false" text="Apply" />
+                        <Button layoutX="126.0" layoutY="242.0" mnemonicParsing="false" onAction="#updateDatabaseParameters" text="Apply" />
                      </children>
                   </AnchorPane>
             </content>

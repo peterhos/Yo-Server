@@ -24,16 +24,22 @@ public class ClientConnection extends Thread {
 	private Contact connection;
 	private volatile boolean isRunning = true;
 	
-	private String dbEngine = "mysql";
-	private String ip = "127.0.0.1";
-	private String port = "3306";
-	private String schema = "YoDB";
-	private String user = "ServerSquad";
-	private String password = "Server1.Conn";
+	private String dbEngine;
+	private String ip;
+	private String port;
+	private String schema;
+	private String user;
+	private String password;
 	
 	public ClientConnection(Socket socket, ServerController serverController) {
 		
 		try {
+			dbEngine = ServerController.dbEngine;
+			ip = ServerController.ip;
+			port = ServerController.port;
+			schema = ServerController.schema;
+			user = ServerController.user;
+			password = ServerController.password;
 			this.serverController = serverController;
 			this.socket = socket;
 			in = new ObjectInputStream(socket.getInputStream());
