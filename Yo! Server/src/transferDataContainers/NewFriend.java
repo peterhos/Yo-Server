@@ -1,6 +1,8 @@
 package transferDataContainers;
 
-public class NewFriend {
+import java.io.Serializable;
+
+public class NewFriend implements Serializable {
 	User friend;
 	
 	public NewFriend(User friend) {
