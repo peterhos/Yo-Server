@@ -11,11 +11,9 @@ import transferDataContainers.RegistrationInformation;
 
 
 public class Registrant {
-	DatabaseConnector dbConnector;
 	Sender sender;
 	
-	public Registrant(ObjectOutputStream out, DatabaseConnector dbConnector) {
-		this.dbConnector = dbConnector;
+	public Registrant(ObjectOutputStream out) {
 		sender = new Sender(out);
 	}
 	
@@ -24,6 +22,8 @@ public class Registrant {
 		String nick = input.getNick();
 		
 		try {
+			DatabaseConnector dbConnector = new DatabaseConnector();
+			
 			if(!(dbConnector.userExists(nick))){		
 				dbConnector.addNewUser(input);
 				reply.setMessage("User added successfully");
@@ -31,12 +31,14 @@ public class Registrant {
 			} else {
 				reply.setMessage("User with this nick already exist in database.");
 			}
-		
+			dbConnector.close();
 			sender.send(reply);
 		} catch (IOException e) {
 			System.err.println("Couldn't send a reply to client");
+			System.err.println(e.getMessage());
 		} catch (SQLException e) {
 			System.err.println("Something went wrong with database connection");
+			System.err.println(e.getMessage());
 		}
 	}
 }

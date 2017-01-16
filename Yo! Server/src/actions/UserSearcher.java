@@ -10,19 +10,20 @@ import transfer.Sender;
 import transferDataContainers.User;
 
 public class UserSearcher {
-	DatabaseConnector dbConnector;
 	Sender sender;
 	
-	public UserSearcher(ObjectOutputStream out, DatabaseConnector dbConnector) {
-		this.dbConnector = dbConnector;
+	public UserSearcher(ObjectOutputStream out) {
 		sender = new Sender(out);
 	}
 	
 	public void search(User user){
 		
 		try {
+			DatabaseConnector dbConnector = new DatabaseConnector();
+			
 			ArrayList<User> foundedUsers = new ArrayList<User>(dbConnector.getUsers(user.getUserName()));
 			
+			dbConnector.close();
 			sender.send(foundedUsers);
 		} catch (SQLException e) {
 			e.printStackTrace();

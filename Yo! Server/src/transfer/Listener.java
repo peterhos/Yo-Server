@@ -13,7 +13,6 @@ import actions.Registrant;
 import actions.UserDataSupplier;
 import actions.UserSearcher;
 import controllers.ServerController;
-import database.DatabaseConnector;
 import transferDataContainers.Invitation;
 import transferDataContainers.InvitationConfirmation;
 import transferDataContainers.LoginCredentials;
@@ -25,31 +24,31 @@ import transferDataContainers.UserDataRequest;
 public class Listener {
 	Object input;
 	
-	public void listen(ObjectInputStream in, ObjectOutputStream out, DatabaseConnector dbConnector, ServerController serverController) 
+	public void listen(ObjectInputStream in, ObjectOutputStream out, ServerController serverController) 
 										throws ClassNotFoundException, IOException, EOFException {
 		input = new Object();
 		input = in.readObject();
 		
 		if (input instanceof LoginCredentials) {	
-			Login login = new Login(out, dbConnector, serverController);
+			Login login = new Login(out, serverController);
 			login.checkCredentials((LoginCredentials)input);
 		} else if (input instanceof Message) {
-			RedirectMessage redMsg = new RedirectMessage(dbConnector);
+			RedirectMessage redMsg = new RedirectMessage();
 			redMsg.redirectMessage((Message)input);
 		} else if (input instanceof RegistrationInformation) {
-			Registrant registrant = new Registrant(out, dbConnector);
+			Registrant registrant = new Registrant(out);
 			registrant.registerNewUser((RegistrationInformation)input);
 		} else if (input instanceof User) {
-			UserSearcher userSearcher = new UserSearcher(out, dbConnector);
+			UserSearcher userSearcher = new UserSearcher(out);
 			userSearcher.search((User)input);
 		} else if (input instanceof Invitation) {
-			InvitationGenerator invitationGenerator = new InvitationGenerator(dbConnector);
+			InvitationGenerator invitationGenerator = new InvitationGenerator();
 			invitationGenerator.generate((Invitation)input);
 		} else if (input instanceof InvitationConfirmation) {
-			InvitationHandler invitationHandler = new InvitationHandler(dbConnector);
+			InvitationHandler invitationHandler = new InvitationHandler();
 			invitationHandler.handle((InvitationConfirmation)input);
-		} else if(input instanceof UserDataRequest) {
-			UserDataSupplier dataSupplier = new UserDataSupplier(out, dbConnector);
+		} else if (input instanceof UserDataRequest) {
+			UserDataSupplier dataSupplier = new UserDataSupplier(out);
 			dataSupplier.deliver((UserDataRequest)input);
 		}
 	}

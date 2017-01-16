@@ -74,6 +74,108 @@ public class DatabaseConnector implements Closeable{
 		
 	}
 	
+	public User getUserInfo(int userId) {
+		User user = new User(null,null,null,null,0,null,null,null);
+		PreparedStatement prepStatement = null;
+		ResultSet result;
+		String query = "SELECT * FROM YoDB.User WHERE UserId=?;";
+		
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			
+			prepStatement = databaseConnection.prepareStatement(query);
+			prepStatement.setInt(1, userId);
+			
+			result = prepStatement.executeQuery();
+			
+			if (result.next()) {
+				user.setUserName(result.getString("Nick"));
+				user.setFirstName(result.getString("FirstName"));
+				user.setLastName(result.getString("LastName"));
+				user.seteMail(result.getString("Email"));
+				user.setAge(result.getInt("Age"));
+				user.setCity(result.getString("City"));
+				user.setCountry(result.getString("Country"));
+				user.setGender(getGenderName(result.getInt("Gender_GenderId")));
+			}
+			
+			
+			prepStatement.close();
+			
+		} catch (SQLException e) {
+			System.err.println("Problem z pobraniem danych o userze");
+		}
+		
+		return user;
+	}
+	
+	public User getUserInfo(String username) {
+		User user = new User(username);
+		PreparedStatement prepStatement = null;
+		ResultSet result;
+		String query = "SELECT * FROM YoDB.User WHERE Nick=?;";
+		
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			
+			prepStatement = databaseConnection.prepareStatement(query);
+			prepStatement.setString(1, username);
+			
+			result = prepStatement.executeQuery();
+			
+			if (result.next()) {
+				user.setUserName(result.getString("Nick"));
+				user.setFirstName(result.getString("FirstName"));
+				user.setLastName(result.getString("LastName"));
+				user.seteMail(result.getString("Email"));
+				user.setAge(result.getInt("Age"));
+				user.setCity(result.getString("City"));
+				user.setCountry(result.getString("Country"));
+				user.setGender(getGenderName(result.getInt("Gender_GenderId")));
+			}
+			
+			
+			prepStatement.close();
+			
+		} catch (SQLException e) {
+			System.err.println("Problem z pobraniem danych o userze");
+		}
+		
+		return user;
+	}
+	
+	public int getUserId(String user) throws SQLException {
+		if(databaseConnection.isClosed())
+			databaseConnection = DriverManager.getConnection(url, login, password);
+		
+		int id = 0;
+		PreparedStatement prepStatement = null;
+		ResultSet result;
+		
+		try {
+			prepStatement = databaseConnection.prepareStatement("SELECT UserId "
+														+ "FROM YoDB.User "
+														+ "where Nick = ?");
+			prepStatement.setString(1, user);
+			result = prepStatement.executeQuery();
+			
+			if(result.next())
+				id = result.getInt("UserId");
+			
+			prepStatement.close();
+			result.close();
+			
+		} catch (NullPointerException e) {
+			System.err.println("Something went wrong in getUserId method");
+		} catch (SQLException e) {
+			System.err.println("getUserId method failed");
+		}
+		return id;
+	}
 	
 	public ArrayList<User> getUsers(String nick) throws SQLException {
 		if(databaseConnection.isClosed())
@@ -116,62 +218,6 @@ public class DatabaseConnector implements Closeable{
 		return foundedUsers;
 	}
 	
-	public String getGenderName(int genderId) {
-		PreparedStatement prepStatement = null;
-		ResultSet result;
-		String query = "SELECT * FROM YoDB.Gender WHERE GenderId=?;";
-		String genderName = null;
-		
-		try {
-			if(databaseConnection.isClosed())
-				databaseConnection = DriverManager.getConnection(url, login, password);
-			
-			prepStatement = databaseConnection.prepareStatement(query);
-			prepStatement.setInt(1, genderId);
-			
-			result = prepStatement.executeQuery();
-			
-			if (result.next()) {
-				genderName = result.getString("Name");
-			}
-			
-			prepStatement.close();
-			
-		} catch (SQLException e) {
-			System.err.println("Problem z pobraniem danych o userze");
-		}
-		
-		return genderName;
-	}
-	
-	public String getUserPassword(String nick) throws SQLException {
-		if(databaseConnection.isClosed())
-			databaseConnection = DriverManager.getConnection(url, login, password);
-		
-		ResultSet myRs = null;
-		PreparedStatement prepStatement = null;
-		
-		String pass = null;
-		try {
-			prepStatement = databaseConnection.prepareStatement("select Password "
-											+ "from YoDB.User "
-											+ "where Nick = ?");
-			prepStatement.setString(1, nick);
-			myRs = prepStatement.executeQuery();
-			
-			if(myRs.next())
-				pass = myRs.getString("Password");
-			
-			prepStatement.close();
-			myRs.close();
-		} catch(SQLException e) {
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return pass;
-	}
-	
 	public void addNewUser(RegistrationInformation newUser) throws SQLException {
 		if(databaseConnection.isClosed())
 			databaseConnection = DriverManager.getConnection(url, login, password);
@@ -206,34 +252,68 @@ public class DatabaseConnector implements Closeable{
 		}
 	}
 	
-	public int getUserId(String user) throws SQLException {
+	public String getUserPassword(String nick) throws SQLException {
 		if(databaseConnection.isClosed())
 			databaseConnection = DriverManager.getConnection(url, login, password);
 		
-		int id = 0;
+		ResultSet myRs = null;
 		PreparedStatement prepStatement = null;
-		ResultSet result;
 		
+		String pass = null;
 		try {
-			prepStatement = databaseConnection.prepareStatement("SELECT UserId "
-														+ "FROM YoDB.User "
-														+ "where Nick = ?");
-			prepStatement.setString(1, user);
-			result = prepStatement.executeQuery();
+			prepStatement = databaseConnection.prepareStatement("select Password "
+											+ "from YoDB.User "
+											+ "where Nick = ?");
+			prepStatement.setString(1, nick);
+			myRs = prepStatement.executeQuery();
 			
-			if(result.next())
-				id = result.getInt("UserId");
+			if(myRs.next())
+				pass = myRs.getString("Password");
 			
 			prepStatement.close();
-			result.close();
+			myRs.close();
+		} catch(SQLException e) {
 			
-		} catch (NullPointerException e) {
-			System.err.println("Something went wrong in getUserId method");
-		} catch (SQLException e) {
-			System.err.println("getUserId method failed");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return id;
+		return pass;
 	}
+	
+	
+	public String getGenderName(int genderId) {
+		PreparedStatement prepStatement = null;
+		ResultSet result;
+		String query = "SELECT * FROM YoDB.Gender WHERE GenderId=?;";
+		String genderName = null;
+		
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			prepStatement = databaseConnection.prepareStatement(query);
+			prepStatement.setInt(1, genderId);
+			
+			result = prepStatement.executeQuery();
+			
+			if (result.next()) {
+				genderName = result.getString("Name");
+			}
+			
+			prepStatement.close();
+			
+		} catch (SQLException e) {
+			System.err.println("Problem z pobraniem danych o userze");
+		}
+		
+		return genderName;
+	}
+	
+	
+	
+	
+	
+	
 	
 	public void saveMessage(Message message) {
 		int senderId = 0;
@@ -266,31 +346,7 @@ public class DatabaseConnector implements Closeable{
 		}
 	}
 	
-	public void saveInvitation(Invitation invitation) {
-		int senderId = 0;
-		int receiverId = 0;
-		PreparedStatement prepStatement = null;
-		String sql = "INSERT INTO `YoDB`.`Notification` (`NotifTypeId`, `Status`, `ReceiverId`, `SenderId`) "
-				+ "VALUES ('1', '0', ?, ?);";
-		
-		try {
-			if(databaseConnection.isClosed())
-				databaseConnection = DriverManager.getConnection(url, login, password);
-			
-			senderId = getUserId(invitation.getSender().getUserName());
-			receiverId = getUserId(invitation.getReceiver().getUserName());
-			
-			prepStatement = databaseConnection.prepareStatement(sql);
-			prepStatement.setInt(1, receiverId);
-			prepStatement.setInt(2, senderId);
-			
-			prepStatement.executeUpdate();
-			
-			prepStatement.close();
-		} catch (SQLException e) {
-			System.err.println("Problem z insertem zaproszenia");
-		}
-	}
+	
 	
 	public void addFriend(User user, User friend, LocalDateTime confirmationDate) {
 		int userId = 0;
@@ -322,6 +378,69 @@ public class DatabaseConnector implements Closeable{
 		}
 	}
 	
+	public void saveInvitation(Invitation invitation) {
+		int senderId = 0;
+		int receiverId = 0;
+		PreparedStatement prepStatement = null;
+		String sql = "INSERT INTO `YoDB`.`Notification` (`NotifTypeId`, `Status`, `ReceiverId`, `SenderId`) "
+				+ "VALUES ('1', '0', ?, ?);";
+		
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			senderId = getUserId(invitation.getSender().getUserName());
+			receiverId = getUserId(invitation.getReceiver().getUserName());
+			
+			prepStatement = databaseConnection.prepareStatement(sql);
+			prepStatement.setInt(1, receiverId);
+			prepStatement.setInt(2, senderId);
+			
+			prepStatement.executeUpdate();
+			
+			prepStatement.close();
+		} catch (SQLException e) {
+			System.err.println("Problem z insertem zaproszenia");
+		}
+	}
+	
+	public ArrayList<Invitation> getInvitations(String username) {
+		ArrayList<Invitation> invitations = new ArrayList<Invitation>();
+		
+		PreparedStatement prepStatement = null;
+		ResultSet result;
+		String query = "SELECT * "
+				+ "FROM YoDB.Message "
+				+ "WHERE NotifTypeId=1 AND Status=0 AND ReceiverId=?";
+		int userId;
+		
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			userId = getUserId(username);
+			
+			prepStatement = databaseConnection.prepareStatement(query);
+			prepStatement.setInt(1, userId);
+			
+			result = prepStatement.executeQuery();
+			
+			while (result.next()) {
+				User sender = new User(getUserInfo(result.getInt("SenderId")));
+				
+				invitations.add(new Invitation(sender, new User(username)));
+			}
+			
+			
+			prepStatement.close();
+			
+		} catch (SQLException e) {
+			System.err.println("Problem z pobraniem przyjaciol");
+		}
+		
+		return invitations;
+	}
+	
 	public void deleteNotification(User sender, User receiver) {
 		int senderId = 0;
 		int receiverId = 0;
@@ -346,80 +465,6 @@ public class DatabaseConnector implements Closeable{
 		} catch (SQLException e) {
 			System.err.println("Problem z deletem zaproszenia");
 		}
-	}
-	
-	public User getUserInfo(String username) {
-		User user = new User(username);
-		PreparedStatement prepStatement = null;
-		ResultSet result;
-		String query = "SELECT * FROM YoDB.User WHERE Nick=?;";
-		
-		try {
-			if(databaseConnection.isClosed())
-				databaseConnection = DriverManager.getConnection(url, login, password);
-			
-			
-			prepStatement = databaseConnection.prepareStatement(query);
-			prepStatement.setString(1, username);
-			
-			result = prepStatement.executeQuery();
-			
-			if (result.next()) {
-				user.setUserName(result.getString("Nick"));
-				user.setFirstName(result.getString("FirstName"));
-				user.setLastName(result.getString("LastName"));
-				user.seteMail(result.getString("Email"));
-				user.setAge(result.getInt("Age"));
-				user.setCity(result.getString("City"));
-				user.setCountry(result.getString("Country"));
-				user.setGender(getGenderName(result.getInt("Gender_GenderId")));
-			}
-			
-			
-			prepStatement.close();
-			
-		} catch (SQLException e) {
-			System.err.println("Problem z pobraniem danych o userze");
-		}
-		
-		return user;
-	}
-	
-	public User getUserInfo(int userId) {
-		User user = new User(null,null,null,null,0,null,null,null);
-		PreparedStatement prepStatement = null;
-		ResultSet result;
-		String query = "SELECT * FROM YoDB.User WHERE UserId=?;";
-		
-		try {
-			if(databaseConnection.isClosed())
-				databaseConnection = DriverManager.getConnection(url, login, password);
-			
-			
-			prepStatement = databaseConnection.prepareStatement(query);
-			prepStatement.setInt(1, userId);
-			
-			result = prepStatement.executeQuery();
-			
-			if (result.next()) {
-				user.setUserName(result.getString("Nick"));
-				user.setFirstName(result.getString("FirstName"));
-				user.setLastName(result.getString("LastName"));
-				user.seteMail(result.getString("Email"));
-				user.setAge(result.getInt("Age"));
-				user.setCity(result.getString("City"));
-				user.setCountry(result.getString("Country"));
-				user.setGender(getGenderName(result.getInt("Gender_GenderId")));
-			}
-			
-			
-			prepStatement.close();
-			
-		} catch (SQLException e) {
-			System.err.println("Problem z pobraniem danych o userze");
-		}
-		
-		return user;
 	}
 	
 	public ArrayList<User> getUserFriends(String username) {
@@ -528,40 +573,5 @@ public class DatabaseConnector implements Closeable{
 		return unreadMessages;
 	}
 	
-	public ArrayList<Invitation> getInvitations(String username) {
-		ArrayList<Invitation> invitations = new ArrayList<Invitation>();
-		
-		PreparedStatement prepStatement = null;
-		ResultSet result;
-		String query = "SELECT * "
-				+ "FROM YoDB.Message "
-				+ "WHERE NotifTypeId=1 AND Status=0 AND ReceiverId=?";
-		int userId;
-		
-		try {
-			if(databaseConnection.isClosed())
-				databaseConnection = DriverManager.getConnection(url, login, password);
-			
-			userId = getUserId(username);
-			
-			prepStatement = databaseConnection.prepareStatement(query);
-			prepStatement.setInt(1, userId);
-			
-			result = prepStatement.executeQuery();
-			
-			while (result.next()) {
-				User sender = new User(getUserInfo(result.getInt("SenderId")));
-				
-				invitations.add(new Invitation(sender, new User(username)));
-			}
-			
-			
-			prepStatement.close();
-			
-		} catch (SQLException e) {
-			System.err.println("Problem z pobraniem przyjaciol");
-		}
-		
-		return invitations;
-	}
+	
 }

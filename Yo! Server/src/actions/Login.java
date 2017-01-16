@@ -12,13 +12,11 @@ import transferDataContainers.Confirmation;
 import transferDataContainers.LoginCredentials;
 
 public class Login {
-	DatabaseConnector dbConnector;
 	Sender sender;
 	ServerController serverController;
 	
-	public Login(ObjectOutputStream out, DatabaseConnector dbConnector, ServerController serverController) {
+	public Login(ObjectOutputStream out, ServerController serverController) {
 		this.sender = new Sender(out);
-		this.dbConnector = dbConnector;
 		this.serverController = serverController;
 	}
 	
@@ -27,6 +25,8 @@ public class Login {
 		Confirmation reply = new Confirmation();
 		
 		try {
+			DatabaseConnector dbConnector = new DatabaseConnector();
+			
 			if(dbConnector.userExists(credentials.getLogin())){
 				password = dbConnector.getUserPassword(credentials.getLogin());
 				if(credentials.getPassword().equals(password)){
@@ -41,11 +41,11 @@ public class Login {
 			}else {
 				reply.setMessage("There is no user as: " + credentials.getLogin());
 			}
-			
+			dbConnector.close();
 			sender.send(reply);
 		} catch (SQLException e) {
 			serverController.printErrorText("Something went wrong with database connection");
 			serverController.printErrorText(e.getMessage());
-		}
+		} 
 	}
 }

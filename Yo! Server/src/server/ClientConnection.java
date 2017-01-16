@@ -5,20 +5,16 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.sql.SQLException;
 
 import controllers.ServerController;
 import data.Contact;
 import data.OnlineUser;
-import database.DatabaseConnector;
 import transfer.Listener;
-
 
 public class ClientConnection implements Runnable {
 	private Socket socket = null;
 	private ObjectInputStream in = null;
 	private ObjectOutputStream out = null;
-	private DatabaseConnector dbConnector = null;
 	private Listener listener = null;
 	private ServerController serverController = null;
 	private Contact connection;
@@ -34,7 +30,6 @@ public class ClientConnection implements Runnable {
 			out = new ObjectOutputStream(socket.getOutputStream());
 			
 			listener = new Listener();
-			dbConnector = new DatabaseConnector();
 			connection = new Contact(socket);
 			
 			serverController.addContact(connection);
@@ -43,9 +38,6 @@ public class ClientConnection implements Runnable {
             		+ "\n\tInetAddress: " + socket.getInetAddress()
             		+ "\n\tSocketChannel: " + socket.getChannel());
 			clientThread.start();
-		} catch (SQLException e) {
-			serverController.printErrorText("Cannot connect to database.");
-			serverController.printErrorText(e.getMessage());
 		} catch (IOException e) {
 			serverController.printLogText("Closing connection to user because of some fail.");
 			closeConnection();
@@ -55,7 +47,7 @@ public class ClientConnection implements Runnable {
 	public void run() {
 		try {
 			while(isRunning) {
-				listener.listen(in, out, dbConnector, serverController);
+				listener.listen(in, out, serverController);
 			}
 		} catch (EOFException e) {
 			serverController.printErrorText(e.getMessage());
@@ -85,8 +77,6 @@ public class ClientConnection implements Runnable {
 				out.close();
 			if(socket != null)
 				socket.close();
-			if(dbConnector != null)
-				dbConnector.close();
 		} catch (IOException e) {
 			serverController.printErrorText("Closing connection failed !");
 			serverController.showStackTraceDialog(e);

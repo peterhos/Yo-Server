@@ -1,6 +1,7 @@
 package actions;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import data.OnlineUser;
@@ -13,8 +14,12 @@ import transferDataContainers.User;
 public class InvitationHandler {
 	private DatabaseConnector dbConnector = null;
 	
-	public InvitationHandler(DatabaseConnector dbConnector) {
-		this.dbConnector = dbConnector;
+	public InvitationHandler() {
+		try {
+			this.dbConnector = new DatabaseConnector();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void handle(InvitationConfirmation invitationConfirmation) {
@@ -33,6 +38,8 @@ public class InvitationHandler {
 			}
 		} 
 		dbConnector.deleteNotification(sender, receiver);
+		
+		dbConnector.close();
 	}
 	
 	public void sendNewFriend(String username) {
