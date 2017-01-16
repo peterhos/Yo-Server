@@ -26,9 +26,9 @@ public class Server implements Runnable {
 	@Override
 	public void run() {
 		try {
-			serverSocket = new ServerSocket(this.getServerPortNumber());
+			serverSocket = new ServerSocket(serverPortNumber);
 			serverController.printLogText("Server is up & ready for connections");
-              
+
         	while (true) {		
                 listen(); 	
             }
