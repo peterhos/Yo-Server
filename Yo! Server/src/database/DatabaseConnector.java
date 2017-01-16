@@ -310,11 +310,6 @@ public class DatabaseConnector implements Closeable{
 	}
 	
 	
-	
-	
-	
-	
-	
 	public void saveMessage(Message message) {
 		int senderId = 0;
 		int receiverId = 0;
@@ -410,7 +405,7 @@ public class DatabaseConnector implements Closeable{
 		PreparedStatement prepStatement = null;
 		ResultSet result;
 		String query = "SELECT * "
-				+ "FROM YoDB.Message "
+				+ "FROM `YoDB`.`Notification` "
 				+ "WHERE NotifTypeId=1 AND Status=0 AND ReceiverId=?";
 		int userId;
 		
@@ -435,7 +430,7 @@ public class DatabaseConnector implements Closeable{
 			prepStatement.close();
 			
 		} catch (SQLException e) {
-			System.err.println("Problem z pobraniem przyjaciol");
+			System.err.println("Problem z pobraniem zaproszen");
 		}
 		
 		return invitations;
@@ -469,10 +464,11 @@ public class DatabaseConnector implements Closeable{
 	
 	public ArrayList<User> getUserFriends(String username) {
 		ArrayList<User> friends = new ArrayList<User>();
+		
 		PreparedStatement prepStatement = null;
 		ResultSet result;
 		String query = "SELECT User_UserId, User_FriendId "
-				+ "FROM YoDB.User "
+				+ "FROM YoDB.Friend "
 				+ "WHERE User_UserId=? OR User_FriendId=?";
 		int userId;
 		
@@ -484,7 +480,7 @@ public class DatabaseConnector implements Closeable{
 			
 			prepStatement = databaseConnection.prepareStatement(query);
 			prepStatement.setInt(1, userId);
-			prepStatement.setInt(1, userId);
+			prepStatement.setInt(2, userId);
 			
 			result = prepStatement.executeQuery();
 			int tmpUserId;
