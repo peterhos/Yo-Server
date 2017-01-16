@@ -3,10 +3,10 @@ package actions;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import database.DatabaseConnector;
 import transfer.Sender;
+import transferDataContainers.FoundedUsers;
 import transferDataContainers.User;
 
 public class UserSearcher {
@@ -21,10 +21,11 @@ public class UserSearcher {
 		try {
 			DatabaseConnector dbConnector = new DatabaseConnector();
 			
-			ArrayList<User> foundedUsers = new ArrayList<User>(dbConnector.getUsers(user.getUserName()));
+			FoundedUsers foundedUsers = new FoundedUsers(dbConnector.getUsers(user.getUserName()));
+			
+			sender.send(foundedUsers);
 			
 			dbConnector.close();
-			sender.send(foundedUsers);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
