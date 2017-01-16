@@ -18,24 +18,21 @@ public class InvitationHandler {
 	}
 	
 	public void handle(InvitationConfirmation invitationConfirmation) {
+		User sender = invitationConfirmation.getSender();
+		User receiver = invitationConfirmation.getReceiver();
+		
 		if(invitationConfirmation.isConfirmed()) {
-			dbConnector.addFriend(invitationConfirmation.getSender(), 
-									invitationConfirmation.getReceiver(), 
-									LocalDateTime.now());
+			dbConnector.addFriend(sender, receiver, LocalDateTime.now());
 			
-			
-			if(OnlineUser.isOnline(invitationConfirmation.getSender().getUserName())) {
-				sendNewFriend(invitationConfirmation.getSender().getUserName());
+			if(OnlineUser.isOnline(sender.getUserName())) {
+				sendNewFriend(sender.getUserName());
 			}
 			
-			if(OnlineUser.isOnline(invitationConfirmation.getReceiver().getUserName())) {
-				sendNewFriend(invitationConfirmation.getReceiver().getUserName());
+			if(OnlineUser.isOnline(receiver.getUserName())) {
+				sendNewFriend(receiver.getUserName());
 			}
 		} 
-		
-		dbConnector.deleteNotification(invitationConfirmation.getSender(), 
-											invitationConfirmation.getReceiver());
-		
+		dbConnector.deleteNotification(sender, receiver);
 	}
 	
 	public void sendNewFriend(String username) {

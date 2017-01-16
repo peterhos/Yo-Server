@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import controllers.ServerController;
 import transferDataContainers.Invitation;
 import transferDataContainers.Message;
 import transferDataContainers.RegistrationInformation;
@@ -22,11 +23,17 @@ public class DatabaseConnector implements Closeable{
 	private String login;
 	private String password;
 	
-	public DatabaseConnector(String DBMS, String ip, String port, String schema, String login, String password) 
+	public DatabaseConnector() 
 			throws SQLException{
-		this.url = "jdbc:" + DBMS + "://" + ip + ":" + port + "/" + schema +"?useSSL=true";
-		this.login = login;
-		this.password = password;
+		
+		this.url = "jdbc:" + ServerController.dbEngine 
+				+ "://" + ServerController.ip 
+				+ ":" + ServerController.port 
+				+ "/" + ServerController.schema 
+				+ "?useSSL=true";
+		this.login = ServerController.user;
+		this.password = ServerController.password;
+		
 		databaseConnection = DriverManager.getConnection(url, login, password);
 	}
 	

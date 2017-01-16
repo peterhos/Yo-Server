@@ -32,9 +32,7 @@ public class Login {
 				if(credentials.getPassword().equals(password)){
 					reply.setConfirmed(true);
 					reply.setMessage("User " + credentials.getLogin() + " log in successfully!");
-					
 					serverController.printLogText("User " + credentials.getLogin() + " log in successfully!");
-					System.out.println("User " + credentials.getLogin() + " log in successfully!");
 					
 					new OnlineUser(credentials.getLogin(), sender.getOut());
 				} else {
@@ -47,7 +45,7 @@ public class Login {
 			sender.send(reply);
 		} catch (SQLException e) {
 			serverController.printErrorText("Something went wrong with database connection");
-			System.err.println("Something went wrong with database connection");
+			serverController.printErrorText(e.getMessage());
 		}
 	}
 }

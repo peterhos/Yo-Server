@@ -1,5 +1,6 @@
 package controllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -22,14 +23,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import server.Server;
 
 public class ServerController implements Initializable {
 
 	private Server server;
+	public static String srvStatus = "Stopped";
+	
+	public static int serverPortNumber = 1056;
 	
 	public static String dbEngine = "mysql";
 	public static String ip = "127.0.0.1";
@@ -39,7 +41,7 @@ public class ServerController implements Initializable {
 	public static String password = "Server1.Conn";
 	
 	@FXML
-	private Label serverStatus = new Label("Stopped");
+	private Label serverStatus = new Label(srvStatus);
 	
 	@FXML
 	private TextArea logArea = new TextArea("");
@@ -63,29 +65,6 @@ public class ServerController implements Initializable {
 	// The table's data
 	public ObservableList<Contact> data;
 	
-	
-	
-	public void startServer(ActionEvent event) throws Exception {
-		server = new Server(1056, this);
-		serverStatus.setText("Running...");
-	}
-	
-	public void stopServer(ActionEvent event) throws Exception {
-		server.stopServer();
-		serverStatus.setText("Stopped");
-	}
-	
-	public void addContact(Contact connection) {
-		data.add(connection);
-	}
-	
-	public void deleteContact(Contact connection) {
-		for (int i = 0; i < data.size(); i++) {
-			if (data.get(i).equals(connection))
-				data.remove(i);
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -107,7 +86,32 @@ public class ServerController implements Initializable {
 	    tableID.setItems(data);
 	}
 	
+	public void startServer(ActionEvent e) {
+		if (srvStatus == "Stopped") {
+			server = new Server(1056, this);
+			serverStatus.setText("Running...");
+			srvStatus = "Running...";
+		}
+	}
 	
+	public void stopServer(ActionEvent e) throws IOException {
+		if (srvStatus == "Running..."){
+			server.stopServer();
+			serverStatus.setText("Stopped");
+			srvStatus = "Stopped";
+		}
+	}
+	
+	public void addContact(Contact connection) {
+		data.add(connection);
+	}
+	
+	public void deleteContact(Contact connection) {
+		for (int i = 0; i < data.size(); i++) {
+			if (data.get(i).equals(connection))
+				data.remove(i);
+		}
+	}
 	
 	public void printLogText(String text) {
 		logArea.appendText("$: " + text + "\n");
@@ -144,13 +148,13 @@ public class ServerController implements Initializable {
 	}
 	
 	
-	public void showServerStatus() {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("About Yo!");
-		alert.setHeaderText("Yo! Server application");
-		alert.setContentText("Server app create by Cebula Development team.");
-
-		alert.showAndWait();
+	public void showServerStatus() throws IOException {
+		Stage primaryStage = new Stage();
+		Parent root = FXMLLoader.load(getClass().getResource("/design/ServerStatus.fxml"));
+		Scene scene = new Scene(root);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Yo! Server Status");
+		primaryStage.show();
 	}
 	
 	public void showAbout(ActionEvent event) throws Exception {

@@ -8,7 +8,8 @@ import java.util.List;
 
 import controllers.ServerController;
 
-public class Server extends Thread{
+public class Server implements Runnable {
+	private Thread serverThread;
 	private int serverPortNumber;
 	private ServerSocket serverSocket = null;
 	private ServerController serverController;
@@ -18,7 +19,8 @@ public class Server extends Thread{
 	public Server (int serverPortNumber, ServerController serverController) {
 		this.serverPortNumber = serverPortNumber;
 		this.serverController = serverController;
-		start();
+		serverThread = new Thread(this, "ServerThread");
+		serverThread.start();
 	}
 	
 	@Override

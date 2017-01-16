@@ -14,7 +14,7 @@ import database.DatabaseConnector;
 import transfer.Listener;
 
 
-public class ClientConnection extends Thread {
+public class ClientConnection implements Runnable {
 	private Socket socket = null;
 	private ObjectInputStream in = null;
 	private ObjectOutputStream out = null;
@@ -23,43 +23,29 @@ public class ClientConnection extends Thread {
 	private ServerController serverController = null;
 	private Contact connection;
 	private volatile boolean isRunning = true;
-	
-	private String dbEngine;
-	private String ip;
-	private String port;
-	private String schema;
-	private String user;
-	private String password;
+	private Thread clientThread;
 	
 	public ClientConnection(Socket socket, ServerController serverController) {
-		
+		this.serverController = serverController;
+		this.socket = socket;
+		clientThread = new Thread(this,"");
 		try {
-			dbEngine = ServerController.dbEngine;
-			ip = ServerController.ip;
-			port = ServerController.port;
-			schema = ServerController.schema;
-			user = ServerController.user;
-			password = ServerController.password;
-			this.serverController = serverController;
-			this.socket = socket;
 			in = new ObjectInputStream(socket.getInputStream());
 			out = new ObjectOutputStream(socket.getOutputStream());
-			listener = new Listener();
-			dbConnector = new DatabaseConnector(dbEngine, ip, port, schema, user, password);
-			connection = new Contact(socket);
-			serverController.addContact(connection);
 			
+			listener = new Listener();
+			dbConnector = new DatabaseConnector();
+			connection = new Contact(socket);
+			
+			serverController.addContact(connection);
 			serverController.printLogText("Connection established. "
             		+ "\n\tPort: " + socket.getPort()
             		+ "\n\tInetAddress: " + socket.getInetAddress()
             		+ "\n\tSocketChannel: " + socket.getChannel());
-			
-			start();
+			clientThread.start();
 		} catch (SQLException e) {
 			serverController.printErrorText("Cannot connect to database.");
 			serverController.printErrorText(e.getMessage());
-			System.err.println("Cannot connect to database.");
-			System.err.println(e.getMessage());
 		} catch (IOException e) {
 			serverController.printLogText("Closing connection to user because of some fail.");
 			closeConnection();
@@ -75,7 +61,6 @@ public class ClientConnection extends Thread {
 			serverController.printErrorText(e.getMessage());
 		} catch (ClassNotFoundException e) {
 			serverController.printErrorText("Problem with casting class. Provided class can be incompatible.");
-			System.err.println("Problem with casting class. Provided class can be incompatible.");
 		} catch (IOException e) {
 			serverController.printErrorText(e.getMessage());
 			serverController.showStackTraceDialog(e);
