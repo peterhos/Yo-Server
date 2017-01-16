@@ -8,10 +8,12 @@ import java.util.ArrayList;
 
 import database.DatabaseConnector;
 import transfer.Sender;
+import transferDataContainers.Friends;
 import transferDataContainers.Invitation;
 import transferDataContainers.Message;
+import transferDataContainers.OverdueInvitations;
+import transferDataContainers.UnreadMessages;
 import transferDataContainers.User;
-import transferDataContainers.UserData;
 import transferDataContainers.UserDataRequest;
 
 public class UserDataSupplier {
@@ -36,7 +38,14 @@ public class UserDataSupplier {
 			unreadMessages = new ArrayList<Message>(dbConnector.getUnreadedMessages(username));   
 			invitations = new ArrayList<Invitation>(dbConnector.getInvitations(username));
 			
-			sender.send(new UserData(user, friends, unreadMessages, invitations));
+			Friends userFriends = new Friends(friends);
+			UnreadMessages userUnreadMessages = new UnreadMessages(unreadMessages);
+			OverdueInvitations userInvitations = new OverdueInvitations(invitations);
+			
+			sender.send(user);
+			sender.send(userFriends);
+			sender.send(userUnreadMessages);
+			sender.send(userInvitations);
 			
 			dbConnector.close();
 		} catch (SQLException e) {

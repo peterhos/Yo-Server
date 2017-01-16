@@ -422,13 +422,18 @@ public class DatabaseConnector implements Closeable{
 			
 			while (result.next()) {
 				User sender = new User(getUserInfo(result.getInt("SenderId")));
+				User receiver = new User(getUserInfo(username));
+				Invitation invitation = new Invitation(sender,receiver);
+				invitations.add(invitation);
 				
-				invitations.add(new Invitation(sender, new User(username)));
 			}
 			
-			
+			for (Invitation i : invitations) {
+				System.out.println(i.getSender().getUserName());
+			}
 			prepStatement.close();
 			
+			return invitations;
 		} catch (SQLException e) {
 			System.err.println("Problem z pobraniem zaproszen");
 		}
