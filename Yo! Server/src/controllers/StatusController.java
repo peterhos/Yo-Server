@@ -14,6 +14,8 @@ public class StatusController implements Initializable {
 	 */
 	@FXML
 	private Label serverStatus;
+	@FXML
+	private Label hostName;
 	
 	/*
 	 * OS Information
@@ -31,6 +33,7 @@ public class StatusController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		this.hostName.setText(System.getProperty("user.name"));
 		this.serverStatus.setText(ServerController.srvStatus);
 		this.osName.setText(System.getProperty("os.name") + " " + System.getenv("SESSION"));
 		this.osVersion.setText(System.getProperty("os.version"));

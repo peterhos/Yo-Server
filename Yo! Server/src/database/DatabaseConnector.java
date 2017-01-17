@@ -74,6 +74,40 @@ public class DatabaseConnector implements Closeable{
 		
 	}
 	
+	public void updateUserInfo(User user) {
+		
+		PreparedStatement prepStatement = null;
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			prepStatement = databaseConnection.prepareStatement("UPDATE `YoDB`.`User` "
+					+ "SET `FirstName`=?, `LastName`=?, `Email`=?, `Age`=?, `Country`=?, `City`=? "
+					+ "WHERE `UserId`=?;");
+			
+			int userId = getUserId(user.getUserName());
+			
+			prepStatement.setString(1, user.getFirstName());
+			prepStatement.setString(2, user.getLastName());
+			prepStatement.setString(3, user.geteMail());
+			prepStatement.setInt(4, user.getAge());
+			prepStatement.setString(5, user.getCountry());
+			prepStatement.setString(6, user.getCity());
+			prepStatement.setInt(7, userId);
+			
+			
+			prepStatement.executeUpdate();
+			
+			prepStatement.close();
+		} catch(NullPointerException e) {
+			System.err.println("UpdateUserInfo method failed with NullPointerException.");
+			System.err.println(e.getMessage());
+		} catch (SQLException e) {
+			System.err.println("Something went wrong with executing SQL");
+		}
+	}
+	
+	
 	public User getUserInfo(int userId) {
 		User user = new User(null,null,null,null,0,null,null,null);
 		PreparedStatement prepStatement = null;

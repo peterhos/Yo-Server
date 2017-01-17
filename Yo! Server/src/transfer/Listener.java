@@ -10,9 +10,11 @@ import actions.InvitationHandler;
 import actions.Login;
 import actions.RedirectMessage;
 import actions.Registrant;
+import actions.UserDataEditer;
 import actions.UserDataSupplier;
 import actions.UserSearcher;
 import controllers.ServerController;
+import transferDataContainers.EditedUserData;
 import transferDataContainers.Invitation;
 import transferDataContainers.InvitationConfirmation;
 import transferDataContainers.LoginCredentials;
@@ -50,6 +52,9 @@ public class Listener {
 		} else if (input instanceof UserDataRequest) {
 			UserDataSupplier dataSupplier = new UserDataSupplier(out);
 			dataSupplier.deliver((UserDataRequest)input);
+		} else if (input instanceof EditedUserData) {
+			UserDataEditer userDataEditer = new UserDataEditer();
+			userDataEditer.edit((EditedUserData)input);
 		}
 	}
 }
