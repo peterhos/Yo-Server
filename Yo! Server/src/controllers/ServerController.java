@@ -1,6 +1,9 @@
 package controllers;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -20,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -48,6 +52,51 @@ public class ServerController implements Initializable {
 	
 	@FXML
 	private TextArea errorArea = new TextArea("");
+	
+	
+	/*
+	 * Command Line controls 
+	 */
+	@FXML
+	private TextArea commandArea = new TextArea("");
+	
+	@FXML
+	private TextField command = new TextField("");
+	
+	@FXML
+	public void onEnter(ActionEvent event) {
+		
+		String cmd = command.getText();
+		command.clear();
+		String output = this.executeCommand(cmd);
+
+		commandArea.appendText(output);
+		commandArea.appendText("\n");
+	}
+	
+	private String executeCommand(String command) {
+
+		StringBuffer output = new StringBuffer();
+
+		Process p;
+		try {
+			p = Runtime.getRuntime().exec(command);
+			p.waitFor();
+			BufferedReader reader =
+                            new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                        String line = "";
+			while ((line = reader.readLine())!= null) {
+				output.append(line + "\n");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return output.toString();
+
+	}
 	
 	
 	// Table and columns for connections
