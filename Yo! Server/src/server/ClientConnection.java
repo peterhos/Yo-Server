@@ -47,7 +47,7 @@ public class ClientConnection implements Runnable {
 	public void run() {
 		try {
 			while(isRunning) {
-				listener.listen(in, out, serverController);
+				listener.listen(in, out, serverController, this);
 			}
 		} catch (EOFException e) {
 			serverController.printErrorText(e.getMessage());

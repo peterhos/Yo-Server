@@ -14,6 +14,7 @@ import actions.UserDataEditer;
 import actions.UserDataSupplier;
 import actions.UserSearcher;
 import controllers.ServerController;
+import server.ClientConnection;
 import transferDataContainers.EditedUserData;
 import transferDataContainers.Invitation;
 import transferDataContainers.InvitationConfirmation;
@@ -26,7 +27,8 @@ import transferDataContainers.UserDataRequest;
 public class Listener {
 	Object input;
 	
-	public void listen(ObjectInputStream in, ObjectOutputStream out, ServerController serverController) 
+	public void listen(ObjectInputStream in, ObjectOutputStream out, 
+					ServerController serverController, ClientConnection clientConnection) 
 										throws ClassNotFoundException, IOException, EOFException {
 		input = new Object();
 		input = in.readObject();
@@ -55,6 +57,10 @@ public class Listener {
 		} else if (input instanceof EditedUserData) {
 			UserDataEditer userDataEditer = new UserDataEditer();
 			userDataEditer.edit((EditedUserData)input);
+		} else if (input instanceof String) {
+			if(((String)input).equals("quit")) {
+				clientConnection.stopClient();
+			}
 		}
 	}
 }

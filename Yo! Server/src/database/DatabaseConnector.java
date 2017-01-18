@@ -211,9 +211,7 @@ public class DatabaseConnector implements Closeable{
 		return id;
 	}
 	
-	public ArrayList<User> getUsers(String nick) throws SQLException {
-		if(databaseConnection.isClosed())
-			databaseConnection = DriverManager.getConnection(url, login, password);
+	public ArrayList<User> getUsers(String nick) {
 		
 		ResultSet myRs = null;
 		PreparedStatement prepStatement = null;
@@ -223,10 +221,9 @@ public class DatabaseConnector implements Closeable{
 		String pattern = "%" + nick + "%";
 		
 		try {
-			prepStatement = databaseConnection.prepareStatement("SELECT * "
-											+ "FROM YoDB.User "
-											+ "WHERE Nick LIKE ?");
+			prepStatement = databaseConnection.prepareStatement("SELECT * FROM YoDB.User WHERE Nick LIKE ?;");
 			prepStatement.setString(1, pattern);
+			
 			myRs = prepStatement.executeQuery();
 			
 			while(myRs.next()) {
@@ -237,18 +234,22 @@ public class DatabaseConnector implements Closeable{
 				int age = myRs.getInt("Age");
 				String city = myRs.getString("City");
 				String country = myRs.getString("Country");
-				String gender = getGenderName(myRs.getInt("Gender_GederId"));
+				String gender = getGenderName(myRs.getInt("Gender_GenderId"));
 				
-				foundedUsers.add(new User(userName, firstName, lastName, eMail, age, city, country, gender));
+				
+				User user = new User(userName, firstName, lastName, eMail, age, city, country, gender);
+				foundedUsers.add(user);
 			}
 			
 			prepStatement.close();
 			myRs.close();
-		} catch(SQLException e) {
 			
+		} catch(SQLException e) {
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return foundedUsers;
 	}
 	
