@@ -8,7 +8,7 @@ public class EditedUserData implements Serializable {
 	private User user;
 	
 	public EditedUserData(User user) {
-		user = new User(user);
+		this.user = user;
 	}
 
 	public User getUser() {

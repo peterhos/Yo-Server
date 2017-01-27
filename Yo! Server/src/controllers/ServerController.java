@@ -1,13 +1,11 @@
 package controllers;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import activity.TextFileSaver;
+import commandLine.CommandExecutor;
 import data.Contact;
 import dialogs.CloseWindowDialog;
 import dialogs.InformationDialog;
@@ -19,7 +17,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -60,46 +60,23 @@ public class ServerController implements Initializable {
 	@FXML
 	private TextArea commandArea = new TextArea("");
 	
+	
 	@FXML
 	private TextField command = new TextField("");
 	
 	@FXML
 	public void onEnter(ActionEvent event) {
+		CommandExecutor cmdExecutor = new CommandExecutor();
+		String result = cmdExecutor.execute(command.getText());
 		
-		String cmd = command.getText();
-		command.clear();
-		String output = this.executeCommand(cmd);
-
-		commandArea.appendText(output);
+		commandArea.appendText(result);
 		commandArea.appendText("\n");
+		command.clear();
 	}
 	
-	private String executeCommand(String command) {
-
-		StringBuffer output = new StringBuffer();
-
-		Process p;
-		try {
-			p = Runtime.getRuntime().exec(command);
-			p.waitFor();
-			BufferedReader reader =
-                            new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-                        String line = "";
-			while ((line = reader.readLine())!= null) {
-				output.append(line + "\n");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return output.toString();
-
-	}
-	
-	
-	// Table and columns for connections
+	/*
+	 *  Table and columns for connections
+	 */
 	@FXML
 	TableView<Contact> tableID;
 	@FXML
@@ -133,6 +110,11 @@ public class ServerController implements Initializable {
 	
 	    data = FXCollections.observableArrayList();
 	    tableID.setItems(data);
+	    
+	    ContextMenu contextMenu = new ContextMenu();
+        MenuItem register = new MenuItem("Register");
+        contextMenu.getItems().add(register);
+	    commandArea.setContextMenu(contextMenu);
 	}
 	
 	public void startServer(ActionEvent e) {
@@ -170,20 +152,16 @@ public class ServerController implements Initializable {
 		errorArea.appendText("!: " +text + "\n");
 	}
 	
-	public void showStackTraceDialog(Exception e) {
-		Platform.runLater(
-			() -> {
-				new StackTraceDialog(e);  
-			}
-		);
-	}
-	
 	public void cleanLogArea(ActionEvent event) {
 		logArea.clear();
 	}
 	
 	public void cleanErrorArea(ActionEvent event) {
 		errorArea.clear();
+	}
+	
+	public void cleanCmdArea(ActionEvent event) {
+		commandArea.clear();
 	}
 	
 	public void saveLogToFile(ActionEvent event) {
@@ -225,5 +203,13 @@ public class ServerController implements Initializable {
 		
 		if (decision == true)
 		    System.exit(0);
+	}
+	
+	public void showStackTraceDialog(Exception e) {
+		Platform.runLater(
+			() -> {
+				new StackTraceDialog(e);  
+			}
+		);
 	}
 }

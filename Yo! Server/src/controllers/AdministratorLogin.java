@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import dialogs.CloseWindowDialog;
 import javafx.event.ActionEvent;
@@ -9,17 +8,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.stage.Stage;
 
 public class AdministratorLogin {
-
 	@FXML
 	private Label loginStatus;
 	
@@ -28,7 +22,6 @@ public class AdministratorLogin {
 	
 	@FXML
 	private PasswordField password;
-	
 	
 	public void login(ActionEvent event) throws Exception {
 		if (credentialsCorrect()) {
@@ -49,7 +42,6 @@ public class AdministratorLogin {
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		
 	}
 	
 	private void closeProgram() {

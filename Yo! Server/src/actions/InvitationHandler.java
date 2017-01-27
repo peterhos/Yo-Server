@@ -28,7 +28,7 @@ public class InvitationHandler {
 		
 		if(invitationConfirmation.isConfirmed()) {
 			dbConnector.addFriend(sender, receiver, LocalDateTime.now());
-			
+			System.err.println("confirmation");
 			if(OnlineUser.isOnline(sender.getUserName())) {
 				sendNewFriend(sender.getUserName());
 			}
@@ -37,6 +37,7 @@ public class InvitationHandler {
 				sendNewFriend(receiver.getUserName());
 			}
 		} 
+		System.err.println("handle invitation");
 		dbConnector.deleteNotification(sender, receiver);
 		
 		dbConnector.close();

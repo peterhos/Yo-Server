@@ -33,10 +33,17 @@
                   <MenuItem mnemonicParsing="false" onAction="#stopServer" text="Stop" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Console">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Terminal" />
+                  <MenuItem mnemonicParsing="false" text="System monitor" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#cleanLogArea" text="Clean log" />
                   <MenuItem mnemonicParsing="false" onAction="#cleanErrorArea" text="Clean error" />
+                  <MenuItem mnemonicParsing="false" onAction="#cleanCmdArea" text="Clean cmd" />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#openSettings" text="Settings" />
             </items>

@@ -74,18 +74,26 @@ public class DatabaseConnector implements Closeable{
 		
 	}
 	
-	public void updateUserInfo(User user) {
-		
+	public void updateUserInfo(User user) throws SQLException {
 		PreparedStatement prepStatement = null;
+		int userId = 0;
+		
 		try {
 			if(databaseConnection.isClosed())
 				databaseConnection = DriverManager.getConnection(url, login, password);
 			
-			prepStatement = databaseConnection.prepareStatement("UPDATE `YoDB`.`User` "
-					+ "SET `FirstName`=?, `LastName`=?, `Email`=?, `Age`=?, `Country`=?, `City`=? "
-					+ "WHERE `UserId`=?;");
+			userId = getUserId(user.getUserName());
 			
-			int userId = getUserId(user.getUserName());
+			String sql = "UPDATE `YoDB`.`User` "
+					+ "SET `FirstName`=?, "
+						+ "`LastName`=?, "
+						+ "`Email`=?, "
+						+ "`Age`=?, "
+						+ "`Country`=?, "
+						+ "`City`=? "
+					+ "WHERE `UserId`=?;";
+			
+			prepStatement = databaseConnection.prepareStatement(sql);
 			
 			prepStatement.setString(1, user.getFirstName());
 			prepStatement.setString(2, user.getLastName());
@@ -95,15 +103,11 @@ public class DatabaseConnector implements Closeable{
 			prepStatement.setString(6, user.getCity());
 			prepStatement.setInt(7, userId);
 			
-			
 			prepStatement.executeUpdate();
 			
 			prepStatement.close();
-		} catch(NullPointerException e) {
-			System.err.println("UpdateUserInfo method failed with NullPointerException.");
-			System.err.println(e.getMessage());
 		} catch (SQLException e) {
-			System.err.println("Something went wrong with executing SQL");
+			e.printStackTrace();
 		}
 	}
 	
@@ -212,17 +216,27 @@ public class DatabaseConnector implements Closeable{
 	}
 	
 	public ArrayList<User> getUsers(String nick) {
-		
 		ResultSet myRs = null;
 		PreparedStatement prepStatement = null;
-		
 		ArrayList<User> foundedUsers = new ArrayList<User>();
 		
+		String sql = "SELECT * FROM YoDB.User "
+				+ "WHERE Nick LIKE ? "
+					+ "OR FirstName LIKE ? "
+					+ "OR LastName LIKE ? "
+					+ "OR Email LIKE ? "
+					+ "OR Country LIKE ? "
+					+ "OR City LIKE ?;";
 		String pattern = "%" + nick + "%";
 		
 		try {
-			prepStatement = databaseConnection.prepareStatement("SELECT * FROM YoDB.User WHERE Nick LIKE ?;");
+			prepStatement = databaseConnection.prepareStatement(sql);
 			prepStatement.setString(1, pattern);
+			prepStatement.setString(2, pattern);
+			prepStatement.setString(3, pattern);
+			prepStatement.setString(4, pattern);
+			prepStatement.setString(5, pattern);
+			prepStatement.setString(6, pattern);
 			
 			myRs = prepStatement.executeQuery();
 			

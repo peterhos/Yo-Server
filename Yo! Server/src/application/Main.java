@@ -15,7 +15,7 @@ public class Main extends Application {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXML_LOGIN));
 			Parent root = fxmlLoader.load();
-			Scene scene = new Scene(root,250,250);
+			Scene scene = new Scene(root);
 			primaryStage.setTitle("Yo! Login");
 			primaryStage.setScene(scene);
 			primaryStage.show();
