@@ -215,6 +215,51 @@ public class DatabaseConnector implements Closeable{
 		return id;
 	}
 	
+	public void deleteUser(User user) {
+		PreparedStatement prepStatement = null;
+		int userId = 0;
+		String sql = "DELETE FROM `YoDB`.`User` "
+				+ "WHERE `UserId`=?;";
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			userId = getUserId(user.getUserName());
+			prepStatement = databaseConnection.prepareStatement(sql);
+			
+			prepStatement.setInt(1, userId);
+			
+			prepStatement.executeUpdate();
+			
+			prepStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteFriendship(User user) {
+		PreparedStatement prepStatement = null;
+		int userId = 0;
+		String sql = "DELETE FROM `YoDB`.`Friend` "
+				+ "WHERE `User_UserId`=? OR `User_FriendId`=?;";
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			userId = getUserId(user.getUserName());
+			prepStatement = databaseConnection.prepareStatement(sql);
+			
+			prepStatement.setInt(1, userId);
+			prepStatement.setInt(2, userId);
+			
+			prepStatement.executeUpdate();
+			
+			prepStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public ArrayList<User> getUsers(String nick) {
 		ResultSet myRs = null;
 		PreparedStatement prepStatement = null;
@@ -490,6 +535,53 @@ public class DatabaseConnector implements Closeable{
 		return invitations;
 	}
 	
+	public void deleteUserNotifications(User user) {
+		PreparedStatement prepStatement = null;
+		int userId = 0;
+		String sql = "DELETE FROM `YoDB`.`Notification` "
+				+ "WHERE ReceiverId = ? OR SenderId = ?;";
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			userId = getUserId(user.getUserName());
+			prepStatement = databaseConnection.prepareStatement(sql);
+			
+			prepStatement.setInt(1, userId);
+			prepStatement.setInt(2, userId);
+			
+			prepStatement.executeUpdate();
+			
+			prepStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteUserMessages(User user) {
+		PreparedStatement prepStatement = null;
+		int userId = 0;
+		String sql = "DELETE FROM `YoDB`.`Message` "
+				+ "WHERE SenderId = ? OR ReceiverId = ?;";
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			userId = getUserId(user.getUserName());
+			prepStatement = databaseConnection.prepareStatement(sql);
+			
+			prepStatement.setInt(1, userId);
+			prepStatement.setInt(2, userId);
+			
+			prepStatement.executeUpdate();
+			
+			prepStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public void deleteNotification(User sender, User receiver) {
 		int senderId = 0;
 		int receiverId = 0;
@@ -622,6 +714,10 @@ public class DatabaseConnector implements Closeable{
 		
 		return unreadMessages;
 	}
+
+	
+
+	
 	
 	
 }

@@ -12,6 +12,7 @@ import actions.RedirectMessage;
 import actions.Registrant;
 import actions.UserDataEditer;
 import actions.UserDataSupplier;
+import actions.UserRemover;
 import actions.UserSearcher;
 import controllers.ServerController;
 import server.ClientConnection;
@@ -23,6 +24,7 @@ import transferDataContainers.Message;
 import transferDataContainers.RegistrationInformation;
 import transferDataContainers.User;
 import transferDataContainers.UserDataRequest;
+import transferDataContainers.UserToRemove;
 
 public class Listener {
 	Object input;
@@ -57,6 +59,9 @@ public class Listener {
 		} else if (input instanceof EditedUserData) {
 			UserDataEditer userDataEditer = new UserDataEditer();
 			userDataEditer.edit((EditedUserData)input);
+		} else if (input instanceof UserToRemove) {
+			UserRemover userRemover = new UserRemover();
+			userRemover.remove((UserToRemove)input);
 		} else if (input instanceof String) {
 			if(((String)input).equals("quit")) {
 				clientConnection.stopClient();
