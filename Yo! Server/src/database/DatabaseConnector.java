@@ -237,6 +237,34 @@ public class DatabaseConnector implements Closeable{
 		}
 	}
 	
+	public void deleteFriendship(User user, User friend) {
+		PreparedStatement prepStatement = null;
+		int userId = 0;
+		int friendId = 0;
+		String sql = "DELETE FROM `YoDB`.`Friend` "
+				+ "WHERE (`User_UserId`=? AND `User_FriendId`=?) "
+				+ "OR (`User_UserId`=? AND `User_FriendId`=?);";
+		try {
+			if(databaseConnection.isClosed())
+				databaseConnection = DriverManager.getConnection(url, login, password);
+			
+			userId = getUserId(user.getUserName());
+			friendId = getUserId(friend.getUserName());
+			prepStatement = databaseConnection.prepareStatement(sql);
+			
+			prepStatement.setInt(1, userId);
+			prepStatement.setInt(2, friendId);
+			prepStatement.setInt(3, friendId);
+			prepStatement.setInt(4, userId);
+			
+			prepStatement.executeUpdate();
+			
+			prepStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void deleteFriendship(User user) {
 		PreparedStatement prepStatement = null;
 		int userId = 0;
