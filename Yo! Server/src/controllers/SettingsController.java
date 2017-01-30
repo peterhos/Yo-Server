@@ -71,10 +71,10 @@ public class SettingsController implements Initializable{
 		ServerController.user = user.getText();
 		ServerController.password = password.getText();
 		
-		changeToEditable();
+		changeToEditableDatabaseSettings();
 	}
 	
-	public void changeToEditable() {
+	public void changeToEditableDatabaseSettings() {
 		boolean state = engine.isEditable();
 		
 		engine.setEditable(!state);
@@ -83,5 +83,17 @@ public class SettingsController implements Initializable{
 		schema.setEditable(!state);
 		user.setEditable(!state);
 		password.setEditable(!state);
+	}
+	
+	public void updateNetworkParameters() {
+		ServerController.serverPortNumber = Integer.parseInt(portNumber.getText());
+		
+		changeToEditableNetworkSettings();
+	}
+	
+	public void changeToEditableNetworkSettings() {
+		boolean state = portNumber.isEditable();
+		
+		portNumber.setEditable(!state);
 	}
 }

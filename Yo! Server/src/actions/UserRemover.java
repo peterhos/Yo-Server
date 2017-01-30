@@ -17,6 +17,7 @@ public class UserRemover {
 			dbConnector.deleteUserMessages(user);
 			dbConnector.deleteUser(user);
 			
+			dbConnector.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

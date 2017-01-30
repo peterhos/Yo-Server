@@ -29,7 +29,7 @@
                      <children>
                         <HBox layoutX="241.0" layoutY="319.0" spacing="27.0">
                            <children>
-                              <Button layoutX="241.0" layoutY="319.0" mnemonicParsing="false" onAction="#changeToEditable" text="Edit" />
+                              <Button layoutX="241.0" layoutY="319.0" mnemonicParsing="false" onAction="#changeToEditableDatabaseSettings" text="Edit" />
                               <Button layoutX="326.0" layoutY="319.0" mnemonicParsing="false" onAction="#updateDatabaseParameters" text="Apply" />
                            </children>
                         </HBox>
@@ -101,9 +101,9 @@
                           </rowConstraints>
                            <children>
                               <Label text="IP Address:" />
-                              <TextField fx:id="ipAddress" GridPane.columnIndex="1" />
+                              <TextField fx:id="ipAddress" editable="false" GridPane.columnIndex="1" />
                               <Label text="Port:" GridPane.rowIndex="1" />
-                              <TextField fx:id="portNumber" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="portNumber" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Label text="Host name:" GridPane.rowIndex="2" />
                               <TextField fx:id="hostName" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
@@ -113,6 +113,8 @@
                               <Image url="@../../images/Network%20Settings.png" />
                            </image>
                         </ImageView>
+                        <Button layoutX="307.0" layoutY="317.0" mnemonicParsing="false" onAction="#updateNetworkParameters" prefHeight="25.0" prefWidth="62.0" text="Apply" />
+                        <Button layoutX="235.0" layoutY="317.0" mnemonicParsing="false" onAction="#changeToEditableNetworkSettings" prefHeight="25.0" prefWidth="64.0" text="Edit" />
                      </children>
                   </AnchorPane>
               </content>

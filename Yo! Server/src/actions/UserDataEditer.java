@@ -14,6 +14,8 @@ public class UserDataEditer {
 			User usr = new User(editedData.getUser());
 			
 			dbConnector.updateUserInfo(usr);
+			
+			dbConnector.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

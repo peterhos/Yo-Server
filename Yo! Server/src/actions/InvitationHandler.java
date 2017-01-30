@@ -30,11 +30,11 @@ public class InvitationHandler {
 			dbConnector.addFriend(sender, receiver, LocalDateTime.now());
 			System.err.println("confirmation");
 			if(OnlineUser.isOnline(sender.getUserName())) {
-				sendNewFriend(sender.getUserName());
+				sendNewFriend(sender.getUserName(),receiver.getUserName());
 			}
 			
 			if(OnlineUser.isOnline(receiver.getUserName())) {
-				sendNewFriend(receiver.getUserName());
+				sendNewFriend(receiver.getUserName(), sender.getUserName());
 			}
 		} 
 		System.err.println("handle invitation");
@@ -43,9 +43,9 @@ public class InvitationHandler {
 		dbConnector.close();
 	}
 	
-	public void sendNewFriend(String username) {
+	public void sendNewFriend(String username, String friend) {
 		OnlineUser user = OnlineUser.findUser(username);
-		User person = dbConnector.getUserInfo(username);
+		User person = dbConnector.getUserInfo(friend);
 		NewFriend newFriend = new NewFriend(person);
 		Sender sender = new Sender(user.getOut());
 		
@@ -55,4 +55,5 @@ public class InvitationHandler {
 			e.printStackTrace();
 		}
 	}
+	
 }
